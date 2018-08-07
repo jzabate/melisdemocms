@@ -3,32 +3,33 @@
 // buildFilesFoldersRemove = list of files to remove when running final build
 var config = {
 	jsConcatFiles: [
-		'public/js/vendor/jquery-2.2.4.min.js',
-		'public/js/bootstrap.min.js',
-		'public/js/owl.carousel.js',
-		'public/js/jquery.countdown.min.js',
-		'public/js/plugins.js',
-		'public/js/main.js',
-		'public/js/MelisPlugins/MelisDemoCms.MelisCmsSliderShowSliderPlugin.init.js',
-		'public/js/MelisPlugins/MelisDemoCms.MelisCmsNewsLatestNewsPlugin.init.js',
-		'public/js/MelisPlugins/MelisDemoCms.MelisFrontShowListFolderPlugin.init.js'
+		'D:/ZendServer/ZendServer/data/apps/http/melis.local/80/_docroot_/module/MelisSites/MelisDemoCms/public/js/vendor/jquery-2.2.4.min.js',
+		'D:/ZendServer/ZendServer/data/apps/http/melis.local/80/_docroot_/module/MelisSites/MelisDemoCms/public/js/bootstrap.min.js',
+		'D:/ZendServer/ZendServer/data/apps/http/melis.local/80/_docroot_/module/MelisSites/MelisDemoCms/public/js/owl.carousel.js',
+		'D:/ZendServer/ZendServer/data/apps/http/melis.local/80/_docroot_/module/MelisSites/MelisDemoCms/public/js/jquery.countdown.min.js',
+		'D:/ZendServer/ZendServer/data/apps/http/melis.local/80/_docroot_/module/MelisSites/MelisDemoCms/public/js/plugins.js',
+		'D:/ZendServer/ZendServer/data/apps/http/melis.local/80/_docroot_/module/MelisSites/MelisDemoCms/public/js/main.js',
+		'D:/ZendServer/ZendServer/data/apps/http/melis.local/80/_docroot_/vendor/melisplatform/melis-cms-slider/public/plugins/js/plugin.cmsSlider.init.js',
+		'D:/ZendServer/ZendServer/data/apps/http/melis.local/80/_docroot_/module/MelisSites/MelisDemoCms/public/js/MelisPlugins/MelisDemoCms.MelisCmsSliderShowSliderPlugin.init.js',
+		'D:/ZendServer/ZendServer/data/apps/http/melis.local/80/_docroot_/module/MelisSites/MelisDemoCms/public/js/MelisPlugins/MelisDemoCms.MelisCmsNewsLatestNewsPlugin.init.js',
+		'D:/ZendServer/ZendServer/data/apps/http/melis.local/80/_docroot_/module/MelisSites/MelisDemoCms/public/js/MelisPlugins/MelisDemoCms.MelisFrontShowListFolderPlugin.init.js'
 	],
 	cssConcatFiles: [
-		'public/css/bootstrap.min.css',
-		'public/css/core.css',
-		'public/css/shortcode/shortcode.css',
-		'public/css/owl.carousel.css',
-		'public/css/owl.theme.default.css',
-		'public/css/owl.theme.green.min.css',
-		'public/css/style.css',
-		'public/css/responsive.css',
-		'public/css/animate.css',
-		'public/css/custom.css',
-		'public/css/skin/skin-default.css'
+		'D:/ZendServer/ZendServer/data/apps/http/melis.local/80/_docroot_/module/MelisSites/MelisDemoCms/public/css/bootstrap.min.css',
+		'D:/ZendServer/ZendServer/data/apps/http/melis.local/80/_docroot_/module/MelisSites/MelisDemoCms/public/css/core.css',
+		'D:/ZendServer/ZendServer/data/apps/http/melis.local/80/_docroot_/module/MelisSites/MelisDemoCms/public/css/shortcode/shortcode.css',
+		'D:/ZendServer/ZendServer/data/apps/http/melis.local/80/_docroot_/module/MelisSites/MelisDemoCms/public/css/owl.carousel.css',
+		'D:/ZendServer/ZendServer/data/apps/http/melis.local/80/_docroot_/module/MelisSites/MelisDemoCms/public/css/owl.theme.default.css',
+		'D:/ZendServer/ZendServer/data/apps/http/melis.local/80/_docroot_/module/MelisSites/MelisDemoCms/public/css/owl.theme.green.min.css',
+		'D:/ZendServer/ZendServer/data/apps/http/melis.local/80/_docroot_/module/MelisSites/MelisDemoCms/public/css/style.css',
+		'D:/ZendServer/ZendServer/data/apps/http/melis.local/80/_docroot_/module/MelisSites/MelisDemoCms/public/css/responsive.css',
+		'D:/ZendServer/ZendServer/data/apps/http/melis.local/80/_docroot_/module/MelisSites/MelisDemoCms/public/css/animate.css',
+		'D:/ZendServer/ZendServer/data/apps/http/melis.local/80/_docroot_/module/MelisSites/MelisDemoCms/public/css/custom.css',
+		'D:/ZendServer/ZendServer/data/apps/http/melis.local/80/_docroot_/module/MelisSites/MelisDemoCms/public/css/skin/skin-default.css'
 	],
 	buildFilesFoldersRemove: [
-		'public/build/js/!(main.min.js)',
-		'public/build/css/!(main.min.css)'
+		'D:/ZendServer/ZendServer/data/apps/http/melis.local/80/_docroot_/module/MelisSites/MelisDemoCms/public/build/js/!(main.min.js)',
+		'D:/ZendServer/ZendServer/data/apps/http/melis.local/80/_docroot_/module/MelisSites/MelisDemoCms/public/build/css/!(main.min.css)'
 	]
 }
 

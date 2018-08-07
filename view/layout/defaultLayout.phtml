@@ -14,7 +14,7 @@
         // Favicon
         $this->headLink(array('rel' => 'apple-touch-icon', 'href' => $this->basePath('/MelisDemoCms/images/icons/favicon.ico'), 'PREPEND'));
     
-        /*// Bootstrap fremwork main css
+        // Bootstrap fremwork main css
         $this->headLink()->appendStylesheet('/MelisDemoCms/css/bootstrap.min.css');
         
         // This core.css file contents all plugings css file
@@ -39,8 +39,8 @@
         
         // Customs styles
         $this->headLink()->appendStylesheet('/MelisDemoCms/css/custom.css');
-        $this->headLink()->appendStylesheet('/MelisDemoCms/css/skin/skin-default.css');*/
-        $this-headLink()->appendStylesheet('/MelisDemoCms/build/css/main.min.css');
+        $this->headLink()->appendStylesheet('/MelisDemoCms/css/skin/skin-default.css');
+        //$this-headLink()->appendStylesheet('/MelisDemoCms/build/css/main.min.css');
         
         // Render Page CSS from Controller Action of the page
         if (is_array($this->pageCss)){
@@ -251,10 +251,10 @@
         </div> 
         <!-- Body main wrapper end -->
 
-        <?php 
+        <?php
             /* Placed js at the end of the document so the pages load faster */
         
-            /*// jquery latest version
+            // jquery latest version
             $this->inlineScript()->appendFile($this->basePath('/MelisDemoCms/js/vendor/jquery-2.2.4.min.js'));
               
             // Bootstrap framework js
@@ -269,8 +269,8 @@
             // All js plugins included in this file
             $this->inlineScript()->appendFile($this->basePath('/MelisDemoCms/js/plugins.js'));
               
-            $this->inlineScript()->appendFile($this->basePath('/MelisDemoCms/js/main.js'));*/
-            $this->inlineScript()->appendFile($this->basePath('/MelisDemoCms/build/js/main.min.js'));
+            $this->inlineScript()->appendFile($this->basePath('/MelisDemoCms/js/main.js'));
+            //$this->inlineScript()->appendFile($this->basePath('/MelisDemoCms/build/js/main.min.js'));
               
             // Render Page JS from Controller Action of the page
             if (is_array($this->pageJs)){
