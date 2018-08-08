@@ -9,7 +9,7 @@
 
 function MelisCmsSliderShowSliderPlugin_init(idPlugin){
 	
-	var idPlugin = typeof idPlugin != "undefined" ? idPlugin : '';
+	var idPlugin = idPlugin || '';
 	var	$plugin = $('#'+idPlugin);
 	
 	if($plugin.length){
@@ -24,7 +24,8 @@ function MelisCmsSliderShowSliderPlugin_init(idPlugin){
 		        autoplayTimeout:8000
 		    });
 			
-		}else if($plugin.hasClass("aboutus-slider-owl")){
+		}
+		if($plugin.hasClass("aboutus-slider-owl")){
 			
 			$plugin.owlCarousel({
 		    	margin: 30,

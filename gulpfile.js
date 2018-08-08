@@ -8,11 +8,7 @@ var config = {
 		'D:/ZendServer/ZendServer/data/apps/http/melis.local/80/_docroot_/module/MelisSites/MelisDemoCms/public/js/owl.carousel.js',
 		'D:/ZendServer/ZendServer/data/apps/http/melis.local/80/_docroot_/module/MelisSites/MelisDemoCms/public/js/jquery.countdown.min.js',
 		'D:/ZendServer/ZendServer/data/apps/http/melis.local/80/_docroot_/module/MelisSites/MelisDemoCms/public/js/plugins.js',
-		'D:/ZendServer/ZendServer/data/apps/http/melis.local/80/_docroot_/module/MelisSites/MelisDemoCms/public/js/main.js',
-		'D:/ZendServer/ZendServer/data/apps/http/melis.local/80/_docroot_/vendor/melisplatform/melis-cms-slider/public/plugins/js/plugin.cmsSlider.init.js',
-		'D:/ZendServer/ZendServer/data/apps/http/melis.local/80/_docroot_/module/MelisSites/MelisDemoCms/public/js/MelisPlugins/MelisDemoCms.MelisCmsSliderShowSliderPlugin.init.js',
-		'D:/ZendServer/ZendServer/data/apps/http/melis.local/80/_docroot_/module/MelisSites/MelisDemoCms/public/js/MelisPlugins/MelisDemoCms.MelisCmsNewsLatestNewsPlugin.init.js',
-		'D:/ZendServer/ZendServer/data/apps/http/melis.local/80/_docroot_/module/MelisSites/MelisDemoCms/public/js/MelisPlugins/MelisDemoCms.MelisFrontShowListFolderPlugin.init.js'
+		'D:/ZendServer/ZendServer/data/apps/http/melis.local/80/_docroot_/module/MelisSites/MelisDemoCms/public/js/main.js'
 	],
 	cssConcatFiles: [
 		'D:/ZendServer/ZendServer/data/apps/http/melis.local/80/_docroot_/module/MelisSites/MelisDemoCms/public/css/bootstrap.min.css',
@@ -65,7 +61,7 @@ var gulp 			= require('gulp'),
 	gulp.task('styles', function() {
 		return gulp.src(config.cssConcatFiles)
 			.pipe(sourcemaps.init())
-				.pipe(concat('temp.css'))
+				.pipe(concat('temp.css', {newLine: ';'}))
 				.pipe(uglyfycss())
 				.on('error', errorLog)
 				.pipe(autoprefixer({
