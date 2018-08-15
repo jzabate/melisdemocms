@@ -3,29 +3,40 @@
 // buildFilesFoldersRemove = list of files to remove when running final build
 var config = {
 	jsConcatFiles: [
-		'D:/ZendServer/ZendServer/data/apps/http/melis.local/80/_docroot_/module/MelisSites/MelisDemoCms/public/js/vendor/jquery-2.2.4.min.js',
-		'D:/ZendServer/ZendServer/data/apps/http/melis.local/80/_docroot_/module/MelisSites/MelisDemoCms/public/js/bootstrap.min.js',
-		'D:/ZendServer/ZendServer/data/apps/http/melis.local/80/_docroot_/module/MelisSites/MelisDemoCms/public/js/owl.carousel.js',
-		'D:/ZendServer/ZendServer/data/apps/http/melis.local/80/_docroot_/module/MelisSites/MelisDemoCms/public/js/jquery.countdown.min.js',
-		'D:/ZendServer/ZendServer/data/apps/http/melis.local/80/_docroot_/module/MelisSites/MelisDemoCms/public/js/plugins.js',
-		'D:/ZendServer/ZendServer/data/apps/http/melis.local/80/_docroot_/module/MelisSites/MelisDemoCms/public/js/main.js'
+		//'public/js/vendor/jquery-2.2.4.min.js',
+		'public/js/bootstrap.min.js',
+		'public/js/owl.carousel.js',
+		'public/js/jquery.countdown.min.js',
+		'public/js/plugins.js',
+		'public/js/main.js'
 	],
 	cssConcatFiles: [
-		'D:/ZendServer/ZendServer/data/apps/http/melis.local/80/_docroot_/module/MelisSites/MelisDemoCms/public/css/bootstrap.min.css',
-		'D:/ZendServer/ZendServer/data/apps/http/melis.local/80/_docroot_/module/MelisSites/MelisDemoCms/public/css/core.css',
-		'D:/ZendServer/ZendServer/data/apps/http/melis.local/80/_docroot_/module/MelisSites/MelisDemoCms/public/css/shortcode/shortcode.css',
-		'D:/ZendServer/ZendServer/data/apps/http/melis.local/80/_docroot_/module/MelisSites/MelisDemoCms/public/css/owl.carousel.css',
-		'D:/ZendServer/ZendServer/data/apps/http/melis.local/80/_docroot_/module/MelisSites/MelisDemoCms/public/css/owl.theme.default.css',
-		'D:/ZendServer/ZendServer/data/apps/http/melis.local/80/_docroot_/module/MelisSites/MelisDemoCms/public/css/owl.theme.green.min.css',
-		'D:/ZendServer/ZendServer/data/apps/http/melis.local/80/_docroot_/module/MelisSites/MelisDemoCms/public/css/style.css',
-		'D:/ZendServer/ZendServer/data/apps/http/melis.local/80/_docroot_/module/MelisSites/MelisDemoCms/public/css/responsive.css',
-		'D:/ZendServer/ZendServer/data/apps/http/melis.local/80/_docroot_/module/MelisSites/MelisDemoCms/public/css/animate.css',
-		'D:/ZendServer/ZendServer/data/apps/http/melis.local/80/_docroot_/module/MelisSites/MelisDemoCms/public/css/custom.css',
-		'D:/ZendServer/ZendServer/data/apps/http/melis.local/80/_docroot_/module/MelisSites/MelisDemoCms/public/css/skin/skin-default.css'
+		//'public/css/bootstrap.min.css',
+		//'public/css/font-awesome.min.css', // start instead of core.css
+		'public/css/material-design-iconic-font.min.css',
+		'public/css/plugins/animate.css',
+		'public/css/plugins/meanmenu.min.css',
+		'public/css/plugins/custom-animation.css',
+		'public/css/plugins/slick.css',
+		'public/css/plugins/jquery-ui.min.css',
+		'public/css/shortcode/default.css',
+		'public/css/nivo-slider.css',
+		'public/css/plugins/fancybox/jquery.fancybox.css',
+		'public/css/shortcode/shortcode.css', // end instead of core.css
+		'public/css/owl.carousel.css',
+		'public/css/owl.theme.default.css',
+		'public/css/owl.theme.green.min.css',
+		'public/css/style.css',
+		'public/css/responsive.css',
+		'public/css/animate.css',
+		'public/css/custom.css',
+		'public/css/skin/skin-default.css'
 	],
 	buildFilesFoldersRemove: [
-		'D:/ZendServer/ZendServer/data/apps/http/melis.local/80/_docroot_/module/MelisSites/MelisDemoCms/public/build/js/!(main.min.js)',
-		'D:/ZendServer/ZendServer/data/apps/http/melis.local/80/_docroot_/module/MelisSites/MelisDemoCms/public/build/css/!(main.min.css)'
+		'public/build/js/!(main.min.js)',
+		'public/build/css/!(main.min.css)',
+		'public/build/!(fonts)',
+		'public/build/!(images)'
 	]
 }
 
@@ -37,6 +48,7 @@ var gulp 			= require('gulp'),
 	rename 			= require('gulp-rename'); // rename files using some transformers
 	uglyfycss		= require('gulp-uglifycss'), // css minifier
 	autoprefixer 	= require('gulp-autoprefixer'), // css prefixer
+	stripcsscom		= require('gulp-strip-css-comments'), // strip css comments
 	del 			= require('del'); // delete files and folders using globs
 
 	// log errors
@@ -60,8 +72,9 @@ var gulp 			= require('gulp'),
 	// style task
 	gulp.task('styles', function() {
 		return gulp.src(config.cssConcatFiles)
+			.pipe(stripcsscom({preserve: false}))
 			.pipe(sourcemaps.init())
-				.pipe(concat('temp.css', {newLine: ';'}))
+				.pipe(concat('temp.css'))
 				.pipe(uglyfycss())
 				.on('error', errorLog)
 				.pipe(autoprefixer({
@@ -83,8 +96,8 @@ var gulp 			= require('gulp'),
 
 	// task to create build directory for all js & css files
 	gulp.task('build:copy', ['build:cleanfolder'], function() {
-		return gulp.src(['public/css/**/*', 'public/js/**/*'])
-				   .pipe(gulp.dest('public/build/'))
+		return gulp.src(['public/**/*/'])
+				   .pipe(gulp.dest('public/build/'));
 	});
 
 	// task to remove unwanted files, related to buildFilesFoldersRemove
