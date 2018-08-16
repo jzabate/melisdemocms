@@ -31,13 +31,13 @@ var config = {
 		'public/css/animate.css',
 		'public/css/custom.css',
 		'public/css/skin/skin-default.css'
-	]/*,
+	],
 	buildFilesFoldersRemove: [
 		'public/!(build)/js/!(main.min.js)',
 		'public/!(build)/css/!(main.min.css)',
 		'public/!(build)/!(fonts)',
 		'public/!(build)/!(images)'
-	]*/
+	]
 }
 
 // required
@@ -86,6 +86,9 @@ var gulp 			= require('gulp'),
 			.pipe(gulp.dest('public/build/css'));
 	});
 
+
+
+
 	// build tasks
 	// task to clean all files and folder inside the build folder
 	gulp.task('build:cleanfolder', function(cb) {
@@ -102,23 +105,27 @@ var gulp 			= require('gulp'),
 
 	// task to remove unwanted files, related to buildFilesFoldersRemove
 	gulp.task('build:remove', ['build:copy'], function(cb) {
-		/*del(config.buildFilesFoldersRemove, cb);*/
-		del([
+		del(config.buildFilesFoldersRemove, cb);
+		/*del([
 			'public/build/js/!(*.min.js)',
 			'public/build/css/!(*.min.css)',
 			'public/build/fonts',
 			'public/build/images'
-		], cb);
+		], cb);*/
 	});
 
 	// default build task
 	gulp.task('build', ['build:copy', 'build:remove']);
+
+
 
 	// watch tasks
 	gulp.task('watch', function() {
 		gulp.watch('public/js/**/*.js', ['scripts']);
 		gulp.watch('public/css/**/*.css', ['styles']);
 	});
+
+
 
 	// default task
 	gulp.task('default', ['scripts', 'styles', 'watch']);
