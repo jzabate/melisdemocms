@@ -31,13 +31,13 @@ var config = {
 		'public/css/animate.css',
 		'public/css/custom.css',
 		'public/css/skin/skin-default.css'
-	],
+	]/*,
 	buildFilesFoldersRemove: [
-		'public/build/js/!(main.min.js)',
-		'public/build/css/!(main.min.css)',
-		'public/build/!(fonts)',
-		'public/build/!(images)'
-	]
+		'public/!(build)/js/!(main.min.js)',
+		'public/!(build)/css/!(main.min.css)',
+		'public/!(build)/!(fonts)',
+		'public/!(build)/!(images)'
+	]*/
 }
 
 // required
@@ -94,7 +94,7 @@ var gulp 			= require('gulp'),
 		], cb);
 	});
 
-	// task to create build directory for all js & css files
+	// task to create build directory for all files
 	gulp.task('build:copy', ['build:cleanfolder'], function() {
 		return gulp.src(['public/**/*/'])
 				   .pipe(gulp.dest('public/build/'));
@@ -102,7 +102,13 @@ var gulp 			= require('gulp'),
 
 	// task to remove unwanted files, related to buildFilesFoldersRemove
 	gulp.task('build:remove', ['build:copy'], function(cb) {
-		del(config.buildFilesFoldersRemove, cb);
+		/*del(config.buildFilesFoldersRemove, cb);*/
+		del([
+			'public/build/js/!(*.min.js)',
+			'public/build/css/!(*.min.css)',
+			'public/build/fonts',
+			'public/build/images'
+		], cb);
 	});
 
 	// default build task
