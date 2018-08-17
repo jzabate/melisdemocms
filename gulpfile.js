@@ -3,7 +3,7 @@
 // buildFilesFoldersRemove = list of files to remove when running final build
 var config = {
 	jsConcatFiles: [
-		//'public/js/vendor/jquery-2.2.4.min.js',
+		'public/js/vendor/jquery-2.2.4.min.js',
 		'public/js/bootstrap.min.js',
 		'public/js/owl.carousel.js',
 		'public/js/jquery.countdown.min.js',
@@ -11,18 +11,24 @@ var config = {
 		'public/js/main.js'
 	],
 	cssConcatFiles: [
-		//'public/css/bootstrap.min.css',
-		//'public/css/font-awesome.min.css', // start instead of core.css
+		'public/css/bootstrap.min.css',
+
+		'public/css/font-awesome.min.css', // start instead of core.css
 		'public/css/material-design-iconic-font.min.css',
 		'public/css/plugins/animate.css',
 		'public/css/plugins/meanmenu.min.css',
 		'public/css/plugins/custom-animation.css',
 		'public/css/plugins/slick.css',
 		'public/css/plugins/jquery-ui.min.css',
-		'public/css/shortcode/default.css',
+		'public/css/shortcode/default.css', // bg url in this css needs to be changed
 		'public/css/nivo-slider.css',
-		'public/css/plugins/fancybox/jquery.fancybox.css',
-		'public/css/shortcode/shortcode.css', // end instead of core.css
+		'public/css/plugins/fancybox/jquery.fancybox.css', // end instead of core.css, bg url in this css needs to be changed
+
+		//'public/css/shortcode/shortcode.css', // bg url in this css needs to be changed
+		'public/css/shortcode/header.css',
+		'public/css/shortcode/slider.css',
+		'public/css/shortcode/footer.css',
+
 		'public/css/owl.carousel.css',
 		'public/css/owl.theme.default.css',
 		'public/css/owl.theme.green.min.css',
@@ -33,12 +39,10 @@ var config = {
 		'public/css/skin/skin-default.css'
 	],
 	buildFilesFoldersRemove: [
-		'public/!(build)/js/!(main.min.js)',
-		'public/!(build)/css/!(main.min.css)',
-		'public/!(build)/!(fonts)',
-		'public/!(build)/!(images)'
+		'public/build/js/!(*.min.js)',
+		'public/build/css/!(*.min.css)'
 	]
-}
+};
 
 // required
 var gulp 			= require('gulp'),
@@ -49,6 +53,7 @@ var gulp 			= require('gulp'),
 	uglyfycss		= require('gulp-uglifycss'), // css minifier
 	autoprefixer 	= require('gulp-autoprefixer'), // css prefixer
 	stripcsscom		= require('gulp-strip-css-comments'), // strip css comments
+	replace 		= require('gulp-replace'), // string replace, like css url
 	del 			= require('del'); // delete files and folders using globs
 
 	// log errors
@@ -57,6 +62,15 @@ var gulp 			= require('gulp'),
 		this.emit('end');
 	}
 
+	// test fancy box
+	gulp.task('fancybox', function() {
+		return gulp.src('public/css/plugins/fancybox/jquery.fancybox.css')
+			.pipe(replace('url\(\'', 'url\(\'../images/fancybox/'))
+			.pipe(rename('fancy.css'))
+			.on('error', errorLog)
+			.pipe(gulp.dest('./'));
+	});
+
 	// script task
 	gulp.task('scripts', function() {
 		return gulp.src(config.jsConcatFiles)
@@ -64,7 +78,7 @@ var gulp 			= require('gulp'),
 				.pipe(concat('temp.js'))
 				.pipe(uglify())
 				.on('error', errorLog)
-				.pipe(rename('main.min.js'))
+				.pipe(rename('build.min.js'))
 			.pipe(sourcemaps.write('./'))
 			.pipe(gulp.dest('public/build/js'));
 	});
@@ -73,6 +87,7 @@ var gulp 			= require('gulp'),
 	gulp.task('styles', function() {
 		return gulp.src(config.cssConcatFiles)
 			.pipe(stripcsscom({preserve: false}))
+			.pipe(replace(['../../images', '../images'], ['../../fonts', '../fonts']))
 			.pipe(sourcemaps.init())
 				.pipe(concat('temp.css'))
 				.pipe(uglyfycss())
@@ -81,42 +96,36 @@ var gulp 			= require('gulp'),
 					browsers: ['last 3 versions'],
 					cascade: false
 				}))
-				.pipe(rename('main.min.css'))
+				.pipe(rename('build.min.css'))
 			.pipe(sourcemaps.write('./'))
 			.pipe(gulp.dest('public/build/css'));
 	});
 
 
 
-
 	// build tasks
-	// task to clean all files and folder inside the build folder
-	gulp.task('build:cleanfolder', function(cb) {
+	// clean out all files and folders from build folder
+	gulp.task('build:cleanfolder', function () {
 		del([
 			'public/build/**'
-		], cb);
+		]);
 	});
 
-	// task to create build directory for all files
-	gulp.task('build:copy', ['build:cleanfolder'], function() {
-		return gulp.src(['public/**/*/'])
-				   .pipe(gulp.dest('public/build/'));
+	// task to create build directory of all files
+	gulp.task('build:copy', function() {
+	    return gulp.src('public/**/*/')
+	    		   .on('error', errorLog)
+	    		   .pipe(gulp.dest('public/build/'));
 	});
 
-	// task to remove unwanted files, related to buildFilesFoldersRemove
-	gulp.task('build:remove', ['build:copy'], function(cb) {
-		del(config.buildFilesFoldersRemove, cb);
-		/*del([
-			'public/build/js/!(*.min.js)',
-			'public/build/css/!(*.min.css)',
-			'public/build/fonts',
-			'public/build/images'
-		], cb);*/
+	// task to removed unwanted build files
+	// list all files and directories here that you don't want included
+	gulp.task('build:remove', ['build:copy'], function () {
+		del(config.buildFilesFoldersRemove);
 	});
 
-	// default build task
 	gulp.task('build', ['build:copy', 'build:remove']);
-
+	
 
 
 	// watch tasks
@@ -124,7 +133,6 @@ var gulp 			= require('gulp'),
 		gulp.watch('public/js/**/*.js', ['scripts']);
 		gulp.watch('public/css/**/*.css', ['styles']);
 	});
-
 
 
 	// default task
