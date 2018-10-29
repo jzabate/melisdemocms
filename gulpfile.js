@@ -50,7 +50,7 @@ var gulp 			= require('gulp'),
 	notify 			= require('gulp-notify'), // utility for notification
 	uglify 			= require('gulp-uglify'), // js minifier
 	sourcemaps 		= require('gulp-sourcemaps'), //creates sourcemaps
-	concat			= require('gulp-concat'), // concatenates js files
+	concatjs		= require('gulp-concat'), // concatenates js files
 	concatcss		= require('gulp-concat-css'), // concatenates css files
 	rename 			= require('gulp-rename'), // rename files using some transformers
 	uglyfycss		= require('gulp-uglifycss'), // css minifier
@@ -87,7 +87,7 @@ var gulp 			= require('gulp'),
 				.pipe(concatjs('temp.js'))
 				.pipe(uglify())
 				.on('error', errorLog)
-				.pipe(rename('build.min.js'))
+				.pipe(rename('build.js'))
 			.pipe(sourcemaps.write('./'))
 			.pipe(gulp.dest('public/build/js'));
 	});
@@ -107,14 +107,14 @@ var gulp 			= require('gulp'),
 				.pipe(replace('../../images', '../images'))
 				.pipe(replace('../../fonts', '../fonts'))
 				.pipe(stripcsscom({preserve: false}))
-				.pipe(concat('temp.css'))
+				.pipe(concatcss('temp.css'))
 				.pipe(uglyfycss())
 				.on('error', errorLog)
 				.pipe(autoprefixer({
 					browsers: ['last 3 versions'],
 					cascade: false
 				}))
-				.pipe(rename('build.min.css'))
+				.pipe(rename('build.css'))
 			.pipe(sourcemaps.write('./'))
 			.pipe(gulp.dest('public/build/css'));
 	});

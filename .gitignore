@@ -24,7 +24,7 @@
 ._*
 .Spotlight-V100
 .Trashes
-ehthumbs.db
+thumbs.db
 Thumbs.db
 
 # Build Systems #
@@ -34,3 +34,4 @@ node_modules
 *.css.map
 build/
 dist/
+.idea/
