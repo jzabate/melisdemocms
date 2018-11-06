@@ -47,6 +47,7 @@ var config = {
 
 // required
 var gulp 			= require('gulp'),
+	jshint 			= require('gulp-jshint'),
 	notify 			= require('gulp-notify'), // utility for notification
 	uglify 			= require('gulp-uglify'), // js minifier
 	sourcemaps 		= require('gulp-sourcemaps'), //creates sourcemaps
@@ -88,6 +89,8 @@ var gulp 			= require('gulp'),
 				.pipe(uglify())
 				.on('error', errorLog)
 				.pipe(rename('build.js'))
+				//.pipe(jshint())
+				.pipe(jshint.reporter('default'))
 			.pipe(sourcemaps.write('./'))
 			.pipe(gulp.dest('public/build/js'));
 	});
@@ -125,10 +128,6 @@ var gulp 			= require('gulp'),
 		gulp.watch('public/css/**/*.css', ['styles']);
 	});
 
-	// default task
-	gulp.task('default', ['scripts', 'styles', 'watch']);
-
-
 
 	// build tasks
 	// clean out all files and folders from build folder
@@ -145,8 +144,7 @@ var gulp 			= require('gulp'),
 	    		   .pipe(gulp.dest('public/build/'));
 	});
 
-	// task to removed unwanted build files
-	// list all files and directories here that you don't want included
+		// list all files and directories here that you don't want to be removed
 	gulp.task('build:remove', function () {
 		del(config.buildFilesFoldersRemove);
 	});
@@ -154,4 +152,5 @@ var gulp 			= require('gulp'),
 	gulp.task('build', ['build:cleanfolder', 'build:copy', 'build:remove']);
 
 
-	gulp.task('run:task', ['build', 'default']);
+	// default task
+	gulp.task('default', ['scripts', 'styles', 'build', 'watch']);
