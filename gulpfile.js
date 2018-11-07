@@ -144,7 +144,7 @@ var gulp 			= require('gulp'),
 	    		   .pipe(gulp.dest('public/build/'));
 	});
 
-		// list all files and directories here that you don't want to be removed
+	// list all files and directories here that you don't want to be removed
 	gulp.task('build:remove', function () {
 		del(config.buildFilesFoldersRemove);
 	});
@@ -154,3 +154,7 @@ var gulp 			= require('gulp'),
 
 	// default task
 	gulp.task('default', ['scripts', 'styles', 'build', 'watch']);
+
+
+	// running task in sequence
+	gulp.task('run:task', ['build', 'default']);
