@@ -1,6 +1,7 @@
-// config object
-// jsConcatFiles = list of javascript files  ( in order ) to concatenate
-// buildFilesFoldersRemove = list of files to remove when running final build
+/* config object
+ * jsConcatFiles = list of javascript files  ( in order ) to concatenate
+ * buildFilesFoldersRemove = list of files to remove when running final build
+ */
 var config = {
 	jsConcatFiles: [
 		'public/js/vendor/jquery-2.2.4.min.js',
@@ -12,6 +13,8 @@ var config = {
 	],
 	cssConcatFiles: [
 		'public/css/bootstrap.min.css',
+
+		//'public/css/core.css',
 
 		'public/css/font-awesome.min.css', // start instead of core.css
 		'public/css/material-design-iconic-font.min.css',
@@ -45,7 +48,6 @@ var config = {
 	]
 };
 
-// required
 var gulp 			= require('gulp'),
 	jshint 			= require('gulp-jshint'),
 	notify 			= require('gulp-notify'), // utility for notification
@@ -90,36 +92,34 @@ var gulp 			= require('gulp'),
 				.on('error', errorLog)
 				.pipe(rename('build.js'))
 				//.pipe(jshint())
-				.pipe(jshint.reporter('default'))
+				//.pipe(jshint.reporter('default'))
 			.pipe(sourcemaps.write('./'))
-			.pipe(gulp.dest('public/build/js'));
+			.pipe(gulp.dest('public/js'));
 	});
 
 	// style task
 	gulp.task('styles', function() {
 		return gulp.src(config.cssConcatFiles)
-			.pipe(sourcemaps.init())
-				.pipe(
-					replace(/ulr\(\'/g, function(match) {
-						if ( this.file.relative === "jquery.fancybox.css" ) {
-							return 'url\(\'../images/fancybox/';
-						} else { return match; }
-					})
-				)
-				.pipe(replace('plugins/fancybox', '../images/fancybox'))
-				.pipe(replace('../../images', '../images'))
-				.pipe(replace('../../fonts', '../fonts'))
-				.pipe(stripcsscom({preserve: false}))
-				.pipe(concatcss('temp.css'))
-				.pipe(uglyfycss())
-				.on('error', errorLog)
-				.pipe(autoprefixer({
-					browsers: ['last 3 versions'],
-					cascade: false
-				}))
-				.pipe(rename('build.css'))
-			.pipe(sourcemaps.write('./'))
-			.pipe(gulp.dest('public/build/css'));
+			.pipe(
+				replace(/ulr\(\'/g, function(match) {
+					if ( this.file.relative === "jquery.fancybox.css" ) {
+						return 'url\(\'../images/fancybox/';
+					} else { return match; }
+				})
+			)
+			.pipe(replace('plugins/fancybox', '../images/fancybox'))
+			.pipe(replace('../../images', '../images'))
+			.pipe(replace('../../fonts', '../fonts'))
+			.pipe(stripcsscom({preserve: false}))
+			.pipe(concatcss('temp.css'))
+			.pipe(uglyfycss())
+			.on('error', errorLog)
+			.pipe(autoprefixer({
+				browsers: ['last 3 versions'],
+				cascade: false
+			}))
+			.pipe(rename('build.css'))
+		.pipe(gulp.dest('public/css'));
 	});
 
 	// watch tasks
@@ -128,33 +128,38 @@ var gulp 			= require('gulp'),
 		gulp.watch('public/css/**/*.css', ['styles']);
 	});
 
+	// gulp.task('default', ['scripts', 'styles', 'html', 'browser-sync', 'watch']);
+	// default task
+	gulp.task('default', ['scripts', 'styles', 'watch']);
+
+
 
 	// build tasks
 	// clean out all files and folders from build folder
-	gulp.task('build:cleanfolder', function () {
+	gulp.task('build:cleanfolder', function (cb) {
 		del([
-			'public/build/**'
-		]);
+			'public/build/**',
+			'public/build/!js/build.js',
+			'public/build/!css/!build.css'
+		], cb);
 	});
 
 	// task to create build directory of all files
-	gulp.task('build:copy', function() {
-	    return gulp.src('public/**/*')
+	gulp.task('build:copy', ['build:cleanfolder'], function() {
+	    return gulp.src('public/**/*/')
 	    		   .on('error', errorLog)
 	    		   .pipe(gulp.dest('public/build/'));
 	});
 
 	// list all files and directories here that you don't want to be removed
-	gulp.task('build:remove', function () {
-		del(config.buildFilesFoldersRemove);
+	gulp.task('build:remove', ['build:copy'], function (cb) {
+		del(config.buildFilesFoldersRemove, cb);
 	});
 
-	gulp.task('build', ['build:cleanfolder', 'build:copy', 'build:remove']);
+	gulp.task('build', ['build:copy', 'build:remove']);
 
-
-	// default task
-	gulp.task('default', ['scripts', 'styles', 'build', 'watch']);
-
-
-	// running task in sequence
-	gulp.task('run:task', ['build', 'default']);
+	/* Developer Notes
+	 * FO - Front Office / BO - Back Office
+	 * Run the default task on changes made on FO and clicking of a button in the BO
+	 * to run the build task that will generate build.js and build.css
+	 */
