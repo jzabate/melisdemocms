@@ -42,14 +42,24 @@ var config = {
 		'public/css/custom.css',
 		'public/css/skin/skin-default.css'
 	],
+	buildCopyFiles: [
+		'public/*fonts/**/',
+		'public/*images/**/',
+		'public/*miniTemplatesTinyMce/**/',
+		'public/*css/build.min.css',
+		'public/*js/build.min.js',
+		'public/*js/build.min.js.map'
+	],
 	buildFilesFoldersRemove: [
-		'public/build/js/!(build.js)',
-		'public/build/css/!(build.css)'
+		'public/build/!js/build.min.js',
+		'public/build/!js/build.min.js.map',
+		'public/build/!css/build.min.css'
 	]
 };
 
 var gulp 			= require('gulp'),
-	jshint 			= require('gulp-jshint'),
+	jshint 			= require('gulp-jshint'), // javascript error hint
+	runTaskSeq      = require('gulp-sequence'),
 	notify 			= require('gulp-notify'), // utility for notification
 	uglify 			= require('gulp-uglify'), // js minifier
 	sourcemaps 		= require('gulp-sourcemaps'), //creates sourcemaps
@@ -61,7 +71,8 @@ var gulp 			= require('gulp'),
 	stripcsscom		= require('gulp-strip-css-comments'), // strip css comments
 	replace 		= require('gulp-replace'), // string replace, like css url
 	concatc 		= require('gulp-concat-callback'), // concatenates files with callback to alter file contents before concatenation
-	del 			= require('del'); // delete files and folders using globs
+	del 			= require('del'), // delete files and folders using globs
+	fs 				= require('fs');
 
 	// log errors
 	function errorLog(error) {
@@ -90,7 +101,7 @@ var gulp 			= require('gulp'),
 				.pipe(concatjs('temp.js'))
 				.pipe(uglify())
 				.on('error', errorLog)
-				.pipe(rename('build.js'))
+				.pipe(rename('build.min.js'))
 				//.pipe(jshint())
 				//.pipe(jshint.reporter('default'))
 			.pipe(sourcemaps.write('./'))
@@ -100,63 +111,62 @@ var gulp 			= require('gulp'),
 	// style task
 	gulp.task('styles', function() {
 		return gulp.src(config.cssConcatFiles)
-			.pipe(
-				replace(/ulr\(\'/g, function(match) {
-					if ( this.file.relative === "jquery.fancybox.css" ) {
-						return 'url\(\'../images/fancybox/';
-					} else { return match; }
-				})
-			)
-			.pipe(replace('plugins/fancybox', '../images/fancybox'))
-			.pipe(replace('../../images', '../images'))
-			.pipe(replace('../../fonts', '../fonts'))
-			.pipe(stripcsscom({preserve: false}))
-			.pipe(concatcss('temp.css'))
-			.pipe(uglyfycss())
+			.pipe(sourcemaps.init())
+				.pipe(stripcsscom({preserve: false}))
+				.pipe(concatcss('temp.css'))
+				.pipe(uglyfycss())
+				.on('error', errorLog)
+				.pipe(autoprefixer({
+					browsers: ['last 3 versions'],
+					cascade: false
+				}))
+				.pipe(rename('build.min.css'))
+			.pipe(sourcemaps.write('./'))
 			.on('error', errorLog)
-			.pipe(autoprefixer({
-				browsers: ['last 3 versions'],
-				cascade: false
-			}))
-			.pipe(rename('build.css'))
-		.pipe(gulp.dest('public/css'));
+			.pipe(gulp.dest('public/css'));
+	});
+
+	// phtml task
+	gulp.task('phtml', function() {
+		return gulp.src('view/**/*.phtml')
 	});
 
 	// watch tasks
 	gulp.task('watch', function() {
 		gulp.watch('public/js/**/*.js', ['scripts']);
 		gulp.watch('public/css/**/*.css', ['styles']);
+		gulp.watch('view/**/*.phtml', ['phtml']);
 	});
 
 	// gulp.task('default', ['scripts', 'styles', 'html', 'browser-sync', 'watch']);
 	// default task
-	gulp.task('default', ['scripts', 'styles', 'watch']);
+	gulp.task('default', ['scripts', 'styles', 'phtml', 'watch']);
 
 
 
 	// build tasks
 	// clean out all files and folders from build folder
-	gulp.task('build:cleanfolder', function (cb) {
+	gulp.task('build:cleanfolder', function () {
 		del([
-			'public/build/**',
-			'public/build/!js/build.js',
-			'public/build/!css/!build.css'
-		], cb);
+			'public/build/**'
+		]);
 	});
 
 	// task to create build directory of all files
-	gulp.task('build:copy', ['build:cleanfolder'], function() {
-	    return gulp.src('public/**/*/')
-	    		   .on('error', errorLog)
-	    		   .pipe(gulp.dest('public/build/'));
+	gulp.task('build:copy', function() {
+		if ( !fs.existsSync('public/build') ) {
+	    	return gulp.src(config.buildCopyFiles)
+		    		   .on('error', errorLog)
+		    		   .pipe(gulp.dest('public/build/'));
+	   	}
 	});
 
 	// list all files and directories here that you don't want to be removed
-	gulp.task('build:remove', ['build:copy'], function (cb) {
-		del(config.buildFilesFoldersRemove, cb);
+	gulp.task('build:remove', function () {
+		del(config.buildFilesFoldersRemove);
 	});
 
-	gulp.task('build', ['build:copy', 'build:remove']);
+	gulp.task('build', runTaskSeq('build:cleanfolder', 'build:copy', 'build:remove'));
 
 	/* Developer Notes
 	 * FO - Front Office / BO - Back Office
